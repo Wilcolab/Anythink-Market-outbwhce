@@ -1,0 +1,48 @@
+/**
+ * Convert a string to snake_case.
+ *
+ * Rules:
+ * - Insert underscore between camelCase boundaries: "fooBar" -> "foo_bar"
+ * - Replace spaces, hyphens and punctuation with underscores
+ * - Collapse multiple underscores and trim leading/trailing underscores
+ * - Lowercase the result
+ *
+ * @param {string} input
+ * @returns {string}
+ */
+function toSnakeCase(input) {
+    if (input == null) return '';
+    let s = String(input).trim();
+
+    // Insert underscore between lower->Upper (camelCase) boundaries
+    s = s.replace(/([a-z0-9])([A-Z])/g, '$1_$2');
+
+    // Replace common separators (space, hyphen, dot, slash, etc.) with underscore
+    s = s.replace(/[\s\-./\\]+/g, '_');
+
+    // Replace any remaining non-alphanumeric (except underscore) with underscore
+    s = s.replace(/[^A-Za-z0-9_]+/g, '_');
+
+    // Collapse multiple underscores into one
+    s = s.replace(/_+/g, '_');
+
+    // Remove leading/trailing underscores
+    s = s.replace(/^_+|_+$/g, '');
+
+    return s.toLowerCase();
+}
+
+// Export for CommonJS & also attach to global for quick REPL use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = toSnakeCase;
+} else {
+    globalThis.toSnakeCase = toSnakeCase;
+}
+
+/*
+Examples:
+toSnakeCase("Hello World!")      -> "hello_world"
+toSnakeCase("fooBarBaz")         -> "foo_bar_baz"
+toSnakeCase("  --Some--Name-- ") -> "some_name"
+toSnakeCase("HTTPResponseCode")  -> "http_response_code"
+*/
